@@ -1,10 +1,15 @@
-import { Field, Form, Formik } from "formik";
 
+import React from "react";
+import { Field, Form, Formik } from "formik";
 import toast from "react-hot-toast";
 
 import css from "./SearchBar.module.css";
 
-export default function SearchBar({ onSubmit }) {
+interface SearchBarProps {
+  onSubmit: (query: string) => void; 
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({ onSubmit }) => {
   return (
     <header>
       <Formik
@@ -31,4 +36,6 @@ export default function SearchBar({ onSubmit }) {
       </Formik>
     </header>
   );
-}
+};
+
+export default SearchBar;

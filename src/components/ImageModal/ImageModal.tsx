@@ -1,23 +1,34 @@
-import Modal from "react-modal";
 
+import React, { useEffect } from "react";
+import Modal from "react-modal";
 import { IoPerson } from "react-icons/io5";
 import { FaHeart } from "react-icons/fa";
 import { GrClose } from "react-icons/gr";
+import { Image } from "../types"; 
 
 import css from "./ImageModal.module.css";
-import { useEffect } from "react";
 
-export default function ImageModal({
+interface ImageModalProps {
+  onCloseModal: () => void;
+  isOpen: boolean;
+  image: Image | null; 
+}
+
+const ImageModal: React.FC<ImageModalProps> = ({
   onCloseModal,
   isOpen,
-  image: { urls, alt_description, user, likes },
-}) {
+  image,
+}) => {
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
   }, [isOpen]);
+
+  if (!image) return null;
+
+  const { urls, alt_description, user, likes } = image;
 
   return (
     <Modal
@@ -41,4 +52,7 @@ export default function ImageModal({
       </div>
     </Modal>
   );
-}
+};
+
+export default ImageModal;
+

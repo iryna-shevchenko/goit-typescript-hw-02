@@ -1,34 +1,32 @@
+
 import { useState, useEffect } from "react";
 import { fetchImages } from "../../image-api";
 import toast, { Toaster } from "react-hot-toast";
-import Modal from "react-modal";
-
 import ImageGallery from "../ImageGallery/ImageGallery";
 import SearchBar from "../SearchBar/SearchBar";
 import Loader from "../Loader/Loader";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn";
 import ImageModal from "../ImageModal/ImageModal";
+import { Image } from "../types"; // Імпорт типу
 
 import css from "./App.module.css";
 
-Modal.setAppElement("#root");
-
-export default function App() {
-  const [query, setQuery] = useState("");
-  const [page, setPage] = useState(1);
-  const [images, setImages] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
+const App: React.FC = () => {
+  const [query, setQuery] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
+  const [images, setImages] = useState<Image[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  const [selectedImage, setSelectedImage] = useState<Image | null>(null);
 
   useEffect(() => {
     if (query === "") {
       return;
     }
 
-    async function getData() {
+    const getData = async () => {
       try {
         setIsLoading(true);
         setError(false);
@@ -38,35 +36,34 @@ export default function App() {
             "Sorry, there are no images matching your search query. Please try again!"
           );
         }
-        setImages((prevImages) => {
-          return [...prevImages, ...data];
-        });
+        setImages((prevImages) => [...prevImages, ...data]);
       } catch (error) {
         setError(true);
       } finally {
         setIsLoading(false);
       }
-    }
+    };
     getData();
   }, [query, page]);
 
-  const handleSubmit = (newQuery) => {
+  const handleSubmit = (newQuery: string) => {
     setQuery(newQuery);
     setPage(1);
     setImages([]);
   };
 
   const handleLoadMore = () => {
-    setPage(page + 1);
+    setPage((prevPage) => prevPage + 1);
   };
 
-  const openModal = (image) => {
+  const openModal = (image: Image) => {
     setSelectedImage(image);
     setModalIsOpen(true);
   };
 
   const closeModal = () => {
     setModalIsOpen(false);
+    setSelectedImage(null);
   };
 
   return (
@@ -90,4 +87,7 @@ export default function App() {
       <Toaster position="top-right" />
     </div>
   );
-}
+};
+
+export default App;
+
